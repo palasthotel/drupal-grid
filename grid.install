@@ -106,5 +106,8 @@ function grid_update_91001( $sandbox )
     'size' => 'big',
   ];
   $schema = $database->schema();
-  $schema->addField($tableName, 'last_updated', $field);
+  // installs since this update get the column from the table's schema
+  if (!$schema->fieldExists($tableName, 'last_updated')) {
+    $schema->addField($tableName, 'last_updated', $field);
+  }
 }

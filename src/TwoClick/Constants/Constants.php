@@ -40,6 +40,12 @@ class Constants {
         'not null' => true,
         'length'   => 50,
       ],
+      'last_updated' => [
+        'type'     => 'int',
+        'not null' => true,
+        'default'  => 0,
+        'size'     => 'big',
+      ],
     ],
     'primary key' => [ 'id' ],
   ];
