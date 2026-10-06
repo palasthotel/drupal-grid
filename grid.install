@@ -44,34 +44,15 @@ function grid_uninstall()
   grid_get_core()->uninstall();
 }
 
-function grid_update_8101($sandbox)
+/**
+ * Implements hook_update_last_removed().
+ *
+ * The updates of the 8.x-1.x line used database functions Drupal 9 removed.
+ * Sites still before them update to a 2.x release of the module first.
+ */
+function grid_update_last_removed()
 {
-    db_query("alter table {grid_nodes} add column langcode varchar(12);");
-}
-function grid_update_8102($sandbox)
-{
-    $query=db_select("grid_nodes","gn");
-    $query->addJoin("INNER","node","n","n.nid=gn.nid");
-    $query->fields("n",array("nid","langcode"));
-    $results=$query->execute();
-    foreach($results as $result)
-    {
-        db_update('grid_nodes')
-            ->fields(array('langcode'=>$result->langcode))
-            ->condition('nid',$result->nid)
-            ->execute();
-    }
-}
-
-function grid_update_8103($sandbox)
-{
-    db_query("alter table {grid_nodes} drop primary key");
-    db_query("alter table {grid_nodes} add primary key(nid,langcode)");
-}
-
-function grid_update_8104($sandbox)
-{
-	grid_get_core()->update();
+  return 8104;
 }
 
 function grid_update_8201($sandbox)
@@ -110,4 +91,39 @@ function grid_update_91001( $sandbox )
   if (!$schema->fieldExists($tableName, 'last_updated')) {
     $schema->addField($tableName, 'last_updated', $field);
   }
+}
+
+/**
+ * Grid library 3.0: a change counter on grids (schema update 8), duplicate links
+ * between grids, containers, slots and boxes removed and unique keys added
+ * (schema update 9).
+ */
+function grid_update_91002($sandbox)
+{
+  grid_get_core()->update();
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function grid_requirements($phase)
+{
+  $requirements = [];
+  if ($phase !== 'runtime') {
+    return $requirements;
+  }
+  $path = \Drupal::service('library.libraries_directory_file_finder')->find('grid');
+  $built = $path && file_exists(DRUPAL_ROOT . '/' . $path . '/js/dist/grid-editor.js');
+  $requirements['grid_library'] = [
+    'title' => t('Grid library'),
+    'value' => $path ?: t('Missing'),
+    'severity' => $built ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+  ];
+  if (!$path) {
+    $requirements['grid_library']['description'] = t('Require palasthotel/grid with Composer; it installs to the libraries directory.');
+  }
+  elseif (!$built) {
+    $requirements['grid_library']['description'] = t('The grid editor is not built yet. Run npm ci && npm run build in @path.', ['@path' => $path]);
+  }
+  return $requirements;
 }

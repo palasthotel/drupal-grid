@@ -33,6 +33,9 @@ class Library {
   public Template $template;
 
   public function __construct() {
+    if (!class_exists(Core::class)) {
+      throw new \RuntimeException('The grid module needs the grid library: require palasthotel/grid with Composer, see the module\'s README.');
+    }
     $this->query = new Query();
     $this->hook = new Hook();
     $this->core = new Core(
@@ -46,7 +49,8 @@ class Library {
     $this->api = new API($this->core, $this->endpoint, $this->template);
     $this->editor = new Editor(
       $this->core->storage,
-      "/".\Drupal::service('extension.list.module')->getPath('grid')."/lib/grid/"
+      grid_library_base_url(),
+      $this->hook
     );
     $this->hook->fire(self::FIRE_LOAD_CLASSES);
 
