@@ -16,6 +16,10 @@ class SpotifyAPI extends ProviderAPIBase implements ProviderAPIInterface {
     $oembedEndpoint = "https://open.spotify.com/oembed?url=$oembedUrl";
 
     $request = curl_init($oembedEndpoint);
+
+    curl_setopt($request, CURLOPT_CONNECTTIMEOUT, 5);
+
+    curl_setopt($request, CURLOPT_TIMEOUT, 15);
     curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($request, CURLOPT_HEADER, false);
     $result = curl_exec($request);
@@ -40,6 +44,12 @@ class SpotifyAPI extends ProviderAPIBase implements ProviderAPIInterface {
 
 
     $request = curl_init($oembedEndpoint);
+
+
+    curl_setopt($request, CURLOPT_CONNECTTIMEOUT, 5);
+
+
+    curl_setopt($request, CURLOPT_TIMEOUT, 15);
     curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($request, CURLOPT_HEADER, false);
     $result = curl_exec($request);

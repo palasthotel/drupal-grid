@@ -77,8 +77,10 @@ class GridEditorController extends ControllerBase implements AccessInterface
             $html="<style>".$css."</style>".$html;
             return array(
                 '#attached'=>array(
-                    'library'=>array('grid/editor')
+                    'library'=>array('grid/editor'),
+                    'drupalSettings'=>grid_editor_settings(),
                 ),
+                '#cache'=>array('contexts'=>array('session')),
                 '#type'=>'markup',
                 '#markup'=>new GridSafeString($html),
             );

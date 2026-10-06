@@ -289,9 +289,9 @@ class grid_video_box extends grid_static_base_box {
     if ($isPlaylist) {
       if (isset($this->content->add_playlist_link)) {
 
-        $moreVideos = t('More Videos');
+        $moreVideos = \Drupal\Component\Utility\Html::escape((string) t('More Videos'));
 
-        $link = $this->content->playlist;
+        $link = \Drupal\Component\Utility\Html::escape(\Drupal\Component\Utility\UrlHelper::stripDangerousProtocols((string) $this->content->playlist));
         $playListLink = <<<HTML
         <div class="playlist-link">
             <a href="$link" target="_blank">$moreVideos</a>

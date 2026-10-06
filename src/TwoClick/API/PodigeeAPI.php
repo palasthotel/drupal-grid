@@ -16,7 +16,9 @@ class PodigeeAPI extends ProviderAPIBase implements ProviderAPIInterface
 
     if (!$this->alreadyLoaded($imageID)) {
       $ch            = curl_init( $url );
-      $fp           = fopen( $this->folderPath . '/' . $imageID, 'wb' );
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+      $fp           = fopen( $this->folderPath . '/' . self::safeId( $imageID ), 'wb' );
       curl_setopt( $ch, CURLOPT_FILE, $fp );
       curl_setopt( $ch, CURLOPT_HEADER, false );
       curl_exec( $ch );
@@ -33,6 +35,10 @@ class PodigeeAPI extends ProviderAPIBase implements ProviderAPIInterface
     $podigeeOembedUrl = "https://embed.podigee.com/oembed?url=$url";
 
     $request     = curl_init( $podigeeOembedUrl );
+
+    curl_setopt($request, CURLOPT_CONNECTTIMEOUT, 5);
+
+    curl_setopt($request, CURLOPT_TIMEOUT, 15);
 
     curl_setopt( $request, CURLOPT_RETURNTRANSFER, true );
     curl_setopt( $request, CURLOPT_HEADER, false );

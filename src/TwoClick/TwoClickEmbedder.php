@@ -28,30 +28,32 @@ class TwoClickEmbedder {
 
     $result = parse_url( $url );
 
-    if ( str_contains( $result['host'], 'youtube' ) || str_contains( $result['host'], 'youtu.be' ) || preg_match( "/\w*?\.youtube\./um", $result['host'] ) || preg_match( "/youtu\.be/um", $result['host'] ) ) {
+    $host = strtolower( $result['host'] ?? '' );
+
+    if ( $this->hostIs( $host, array( 'youtube.com', 'youtube-nocookie.com', 'youtu.be' ) ) ) {
       $this->api = new YouTubeAPI( $this->folderPath );
       return Constants::PROVIDER_YOUTUBE;
     }
 
-    if ( str_contains( $result['host'], 'vimeo' ) || preg_match( "/(\w*?\.)?vimeo\./um", $result['host'] ) ) {
+    if ( $this->hostIs( $host, array( 'vimeo.com' ) ) ) {
       $this->api = new VimeoAPI( $this->folderPath );
       return Constants::PROVIDER_VIMEO;
     }
 
-    if ( str_contains( $result['host'], 'podigee' ) || preg_match( "/(\w*?\.)?podigee\./um", $result['host'] ) ) {
+    if ( $this->hostIs( $host, array( 'podigee.io', 'podigee.com' ) ) ) {
     //  $this->api = new PodigeeAPI( $this->folderPath );
     //  return Constants::PROVIDER_PODIGEE;
       return false;
     }
 
-    if ( str_contains( $result['host'], 'spotify' ) || preg_match( "/(\w*?\.)?spotify\./um", $result['host'] ) ) {
+    if ( $this->hostIs( $host, array( 'spotify.com' ) ) ) {
       $this->api = new SpotifyAPI( $this->folderPath );
       return Constants::PROVIDER_SPOTIFY;
     }
 
 
-    if ( str_contains( $result['host'], 'flickr' ) || preg_match( "/(\w*?\.)?flickr\./um", $result['host'] ) ) {
-      if (str_contains( $result['path'], 'albums' )) {
+    if ( $this->hostIs( $host, array( 'flickr.com' ) ) ) {
+      if (str_contains( $result['path'] ?? '', 'albums' )) {
         $this->api = new FlickrAlbumAPI( $this->folderPath );
         return Constants::PROVIDER_FLICKR;
       }
@@ -85,4 +87,22 @@ class TwoClickEmbedder {
   }
 
 
+
+  /**
+   * The host is one of the domains or a subdomain of one: www.youtube.com, but
+   * not youtube.example.org.
+   *
+   * @param string $host
+   * @param string[] $domains
+   *
+   * @return bool
+   */
+  private function hostIs( string $host, array $domains ): bool {
+    foreach ( $domains as $domain ) {
+      if ( $host === $domain || str_ends_with( $host, '.' . $domain ) ) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

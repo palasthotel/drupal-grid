@@ -10,8 +10,9 @@ namespace Drupal\grid\Controller;
 
 
 use Drupal\Core\Url;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Drupal\grid\Components\GridSafeString;
-use Zend\Diactoros\Response\RedirectResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class GridReusableContainerEditor
 {
@@ -27,7 +28,9 @@ class GridReusableContainerEditor
         return array(
             '#attached'=>array(
                 'library'=>array('grid/editor.reusablecontainer'),
+                'drupalSettings'=>grid_editor_settings(),
             ),
+            '#cache'=>array('contexts'=>array('session')),
             '#type'=>'markup',
             '#markup'=>new GridSafeString($html),
         );
@@ -45,7 +48,9 @@ class GridReusableContainerEditor
         return array(
             '#attached'=>array(
                 'library'=>array('grid/editor.reusablecontainer'),
+                'drupalSettings'=>grid_editor_settings(),
             ),
+            '#cache'=>array('contexts'=>array('session')),
             '#type'=>'markup',
             '#markup'=>new GridSafeString($html),
         );
@@ -65,6 +70,10 @@ class GridReusableContainerEditor
     public function delete($container)
     {
         $storage=grid_get_storage();
+        if(in_array((string)$container, array_map('strval', $storage->getReusedContainerIds()), TRUE))
+        {
+            throw new ConflictHttpException((string)t('This container is still in use.'));
+        }
         $editor=grid_get_library()->editor->getReuseContainerEditor();
         $result=$editor->runDelete($storage,$container);
         if($result===TRUE)

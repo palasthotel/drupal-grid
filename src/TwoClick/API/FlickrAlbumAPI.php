@@ -24,6 +24,10 @@ class FlickrAlbumAPI extends ProviderAPIBase implements ProviderAPIInterface
 
     $request     = curl_init( $flickrOembedUrl );
 
+    curl_setopt($request, CURLOPT_CONNECTTIMEOUT, 5);
+
+    curl_setopt($request, CURLOPT_TIMEOUT, 15);
+
     curl_setopt( $request, CURLOPT_RETURNTRANSFER, true );
     curl_setopt( $request, CURLOPT_HEADER, false );
     $result = curl_exec( $request );

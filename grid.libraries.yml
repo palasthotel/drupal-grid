@@ -5,3 +5,11 @@ grid.two_click:
   dependencies:
     - core/jquery
     - core/once
+
+grid.csrf:
+  version: 1.0.0
+  js:
+    js/grid-csrf.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
