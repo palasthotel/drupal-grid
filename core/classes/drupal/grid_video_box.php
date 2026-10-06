@@ -70,6 +70,7 @@ class grid_video_box extends grid_static_base_box {
       if ( ! in_array( $thumbnailName, $files ) ) {
         $this->persist();
       }
+      if ( !$this->content->title ) $this->content->html = str_replace('two-click__title', 'two-click__title hide', $this->content->html);
 
       return $this->content->html;
     }
@@ -129,9 +130,14 @@ class grid_video_box extends grid_static_base_box {
     if ( isset( $this->content->url ) && ! empty( $this->content->url ) ) {
       $data = grid_two_click_embedding_generateHTML($this->content->url);
 
-      $this->content->thumbnail = $data['videoProperties']['thumbnail'];
+      $this->content->thumbnail = $data['embedProperties']->thumbnail;
 
-      $this->content->html = $data['code'];
+      $html = $data['code'];
+      if ( !$this->content->title ) $html = str_replace('two-click__title', 'two-click__title hide', $html);
+
+
+      $this->content->html = $html;
+
     }
 
   }
