@@ -111,3 +111,38 @@ function grid_update_91001( $sandbox )
     $schema->addField($tableName, 'last_updated', $field);
   }
 }
+
+/**
+ * Grid library 3.0: a change counter on grids (schema update 8), duplicate links
+ * between grids, containers, slots and boxes removed and unique keys added
+ * (schema update 9).
+ */
+function grid_update_91002($sandbox)
+{
+  grid_get_core()->update();
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function grid_requirements($phase)
+{
+  $requirements = [];
+  if ($phase !== 'runtime') {
+    return $requirements;
+  }
+  $path = \Drupal::service('library.libraries_directory_file_finder')->find('grid');
+  $built = $path && file_exists(DRUPAL_ROOT . '/' . $path . '/js/dist/grid-editor.js');
+  $requirements['grid_library'] = [
+    'title' => t('Grid library'),
+    'value' => $path ?: t('Missing'),
+    'severity' => $built ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+  ];
+  if (!$path) {
+    $requirements['grid_library']['description'] = t('Require palasthotel/grid with Composer; it installs to the libraries directory.');
+  }
+  elseif (!$built) {
+    $requirements['grid_library']['description'] = t('The grid editor is not built yet. Run npm ci && npm run build in @path.', ['@path' => $path]);
+  }
+  return $requirements;
+}

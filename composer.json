@@ -1,10 +1,18 @@
 {
-    "name": "org/grid",
-    "type": "drupal-drush",
+    "name": "palasthotel/drupal-grid",
+    "description": "Drupal integration of the grid library: landing pages composed from containers and boxes, with drafts and revisions.",
+    "type": "drupal-module",
+    "license": "GPL-3.0-or-later",
+    "homepage": "https://github.com/palasthotel/drupal-grid",
+    "require": {
+        "php": ">=8.2",
+        "drupal/core": "^10.3 || ^11",
+        "palasthotel/grid": "^3.1"
+    },
     "extra": {
         "drush": {
             "services": {
-                "drush.services.yml": "^10"
+                "drush.services.yml": ">=10"
             }
         }
     }
