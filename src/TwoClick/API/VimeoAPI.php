@@ -12,8 +12,8 @@ class VimeoAPI extends ProviderAPIBase implements ProviderAPIInterface
   public function getThumbnail(string $url): string
   {
 
-    $explodedUrl = explode('/', $url);
-    $videoId = end($explodedUrl);
+    $explodedUrl = explode('/', (string) parse_url($url, PHP_URL_PATH));
+    $videoId = self::safeId(end($explodedUrl));
 
     if (!$this->alreadyLoaded($videoId)) {
 
@@ -23,6 +23,8 @@ class VimeoAPI extends ProviderAPIBase implements ProviderAPIInterface
 
       $url = "https://api.vimeo.com/videos/$videoId/pictures?sizes=960";
       $ch = curl_init($url);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 15);
       $customHeaders = array(
         "Authorization: bearer $vimeoAPIKey",
       );
@@ -40,6 +42,8 @@ class VimeoAPI extends ProviderAPIBase implements ProviderAPIInterface
 
         $thumbnailurl = $thumbnailresult->data[0]->sizes[0]->link;
         $ch = curl_init($thumbnailurl);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
         $fp = fopen($this->folderPath . '/' . $videoId . '.jpg', 'wb');
         curl_setopt($ch, CURLOPT_FILE, $fp);
         curl_setopt($ch, CURLOPT_HEADER, false);
@@ -64,6 +68,8 @@ class VimeoAPI extends ProviderAPIBase implements ProviderAPIInterface
 
     $vimeoAPIurl = "https://vimeo.com/api/oembed.json?url=" . urlencode($url) . "&autoplay=1&controls=1&dnt=1";
     $request = curl_init($vimeoAPIurl);
+    curl_setopt($request, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($request, CURLOPT_TIMEOUT, 15);
 
     curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($request, CURLOPT_HEADER, false);

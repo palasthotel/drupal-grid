@@ -74,7 +74,7 @@ class YouTubeAPI extends ProviderAPIBase implements ProviderAPIInterface
     }
 
     $parts = explode("v=", $cleanUrl);
-    $videoId = end($parts);
+    $videoId = self::safeId(end($parts));
 
     if (strlen($videoId) > 50) {
       //something went wrong, let's not explode our table
@@ -127,6 +127,8 @@ class YouTubeAPI extends ProviderAPIBase implements ProviderAPIInterface
 
     $ytAPIurl = "https://www.youtube-nocookie.com/oembed?url=" . urlencode($url) . "&format=json&start=$timestamp";
     $request = curl_init($ytAPIurl);
+    curl_setopt($request, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($request, CURLOPT_TIMEOUT, 15);
     curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($request, CURLOPT_HEADER, false);
     $result = curl_exec($request);
@@ -168,6 +170,8 @@ class YouTubeAPI extends ProviderAPIBase implements ProviderAPIInterface
   private function getCleanYoutubeUrl(string $url)
   {
     $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
     curl_setopt($ch, CURLOPT_HEADER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -213,7 +217,7 @@ class YouTubeAPI extends ProviderAPIBase implements ProviderAPIInterface
     if (!is_array($infos) || !isset($infos['video_id'])) {
       return "default";
     }
-    return $infos['video_id'];
+    return self::safeId($infos['video_id']);
   }
 
   private function defaultInfos($url)
@@ -240,6 +244,8 @@ class YouTubeAPI extends ProviderAPIBase implements ProviderAPIInterface
   private function loadAndSaveImage($imageyturl)
   {
     $ch = curl_init($imageyturl);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 
     $fp = fopen($this->folderPathToImage, 'wb');
     if (!$fp) {

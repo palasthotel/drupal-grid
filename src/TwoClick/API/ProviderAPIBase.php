@@ -14,6 +14,18 @@ class ProviderAPIBase {
     $this->folderPath = $folderPath;
 	}
 
+  /**
+   * Ids end up in the names of the cached thumbnails, so only plain characters.
+   *
+   * @param string $id
+   *
+   * @return string
+   */
+  protected static function safeId( $id ) {
+    $id = preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $id );
+    return $id === '' ? 'default' : $id;
+  }
+
   protected function alreadyLoaded( $videoID ) {
     $files         = array_diff( scandir( $this->folderPath ), array( '.', '..' ) );
     foreach ($files as $file){
