@@ -72,13 +72,20 @@ class grid_node_box extends grid_box {
       ->accessCheck(TRUE)
       ->sort('created','DESC');
 		$words=explode(" ", $search);
-		if($search!='')
+		if($search!='' && is_numeric($search) )
 		{
 			foreach($words as $word)
 			{
-				$query->condition('title','%'.$word.'%','LIKE');
+        $query->condition('nid','%'.$word.'%','LIKE');
 			}
 		}
+    else
+    {
+      foreach($words as $word)
+      {
+        $query->condition('title','%'.$word.'%','LIKE');
+      }
+    }
 		$query->range(0,50);
 		$result=$query->execute();
 		if(!empty($result))
@@ -98,7 +105,7 @@ class grid_node_box extends grid_box {
 		}
 		return $results;
 	}
-	
+
 	public function contentStructure () {
 		$view_modes=grid_viewmodes();
 		$modes=array();
