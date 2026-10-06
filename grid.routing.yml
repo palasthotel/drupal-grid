@@ -57,6 +57,7 @@ grid.admin:
   path: 'admin/config/grid'
   defaults:
     _controller: \Drupal\system\Controller\SystemController::systemAdminMenuBlockPage
+    _title: 'Grid Configuration'
   requirements:
     _permission: administer grid
 
@@ -65,6 +66,14 @@ grid.admin.settings:
   defaults:
     _form: '\Drupal\grid\Form\SettingsForm'
     _title: Grid Settings
+  requirements:
+    _permission: administer grid
+
+grid.two_click.settings:
+  path: 'admin/config/grid/settings-two-click'
+  defaults:
+    _form: '\Drupal\grid\Form\SettingsTwoClickForm'
+    _title: 'Grid Two-Click Settings'
   requirements:
     _permission: administer grid
 
