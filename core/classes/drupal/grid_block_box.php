@@ -12,14 +12,19 @@ class grid_block_box extends grid_box {
 	public function build($editmode) {
 		if($editmode)
 		{
-			/** @var Block $block */
-			$block=Block::load($this->content->block_id);
-			return t("Block").": ".$block->label();
+      /** @var Block $block */
+      $block = Block::load( $this->content->block_id );
+      if ( $block ) {
+        return t( "Block" ) . ": " . $block->label();
+      } else {
+        return (string) t( "Warning: Block doesn't exist anymore" );
+      }
 		}
 		else
 		{
 			/** @var Block $block */
 			$block=Block::load($this->content->block_id);
+      if (!$block) return null;
 			$entityTypeManager=\Drupal::entityTypeManager();
 			$output=$entityTypeManager->getViewBuilder("block")->view($block);
 			return (string)\Drupal::service("renderer")->render($output);
