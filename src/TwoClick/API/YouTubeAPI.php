@@ -62,7 +62,7 @@ class YouTubeAPI extends ProviderAPIBase implements ProviderAPIInterface
     $updateCache = false;
     $now = \Drupal::time()->getRequestTime();
     $yesterday = $now - 24 * 60 * 60;
-    if( $cachedInfos->last_updated < $yesterday || $cachedInfos->last_updated === 0) $updateCache = true;
+    if( !$cachedInfos || $cachedInfos->last_updated < $yesterday || $cachedInfos->last_updated === 0) $updateCache = true;
 
     if ($cachedInfos && !$updateCache) {
       return json_decode(json_encode($cachedInfos), true); //return std class as array
@@ -93,11 +93,12 @@ class YouTubeAPI extends ProviderAPIBase implements ProviderAPIInterface
         ->fields($insertInfos)
         ->execute();
     }
-
-    $database->update($dbTable)
-      ->fields($insertInfos)
-      ->condition("$dbTable.id", $cachedInfos->id)
-      ->execute();
+    else {
+      $database->update($dbTable)
+        ->fields($insertInfos)
+        ->condition("$dbTable.id", $cachedInfos->id)
+        ->execute();
+    }
 
     return $insertInfos;
   }
