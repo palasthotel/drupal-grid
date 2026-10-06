@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: php -l (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["8.2", "8.3", "8.4"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - name: Lint every PHP file
+        run: |
+          status=0
+          while IFS= read -r -d '' file; do
+            php -l "$file" > /dev/null || status=1
+          done < <(find . \( -name '*.php' -o -name '*.module' -o -name '*.install' \) -not -path './vendor/*' -print0)
+          exit $status
+
+  metadata:
+    name: Package metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+      - run: composer validate --no-check-publish --no-check-lock
+      - name: grid.info.yml carries the version of version.txt
+        run: |
+          version="$(cat version.txt)"
+          grep -q "^version: ${version} # x-release-please-version$" grid.info.yml \
+            || { echo "::error::grid.info.yml does not say version ${version}"; exit 1; }
