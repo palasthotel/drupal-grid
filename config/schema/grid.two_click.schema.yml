@@ -1,0 +1,19 @@
+grid.two_click.settings:
+  type: config_object
+  label: 'Grid settings'
+  mapping:
+    langcode:
+      type: string
+      label: 'Language code'
+    two_click_enable:
+      type: boolean
+      label: 'Enable two-click-rendering on all video boxes'
+    two_click_vimeo_api_key:
+      type: string
+      label: 'Vimeo API key'
+    two_click_disclaimer_link:
+      type: label
+      label: 'Link to privacy policy'
+    two_click_disclaimer_text:
+      type: label
+      label: 'Text for two-click-disclaimer'

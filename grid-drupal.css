@@ -7,7 +7,7 @@ body,
 	padding: 0px !important;
 
 }
-.layout-container{
+.page-wrapper > .layout-container {
 	margin:0px !important;
 }
 .grid-toolbar .grid-tool-list{

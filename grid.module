@@ -51,6 +51,7 @@ function grid_grid_load_classes() {
   require_once("core/classes/drupal/grid_image_box.php");
   require_once("core/classes/drupal/grid_video_box.php");
   require_once("core/classes/drupal/grid_gallery_box.php");
+  require_once("core/classes/drupal/grid_html_box.php");
 }
 
 /**
@@ -156,23 +157,23 @@ function grid_library_info_build()
 	 * add editor js files
 	 */
 	$jsfiles= $editor->getEditorJS($language->getId(),FALSE);
-  $js['/'.drupal_get_path('module','grid')."/lib/js/jquery-ui-1.12.1/jquery-ui.min.js"] = array('preprocess'=>false);
+  $js['/'.\Drupal::service('extension.list.module')->getPath('grid')."/lib/js/jquery-ui-1.12.1/jquery-ui.min.js"] = array('preprocess'=>false);
   $js["/grid/ckeditor_config.js"] = array('preprocess' => false, 'type' => 'external');
 	foreach($jsfiles as $idx=>$file)
 	{
-		$js['/'.drupal_get_path('module','grid')."/lib/grid/".$file]=array('preprocess'=>false);
+		$js['/'.\Drupal::service('extension.list.module')->getPath('grid')."/lib/grid/".$file]=array('preprocess'=>false);
 	}
 	foreach( $editor_widgets["js"] as $idx=>$file )
 	{
 		$js['/'.ltrim($file)]=array('preproces'=>false);
 	}
 
-	$base=drupal_get_path('module','grid');
+	$base=\Drupal::service('extension.list.module')->getPath('grid');
 
 	$cssfiles=$editor->getEditorCSS($language->getDirection(),FALSE);
 	foreach($cssfiles as $idx=>$file)
 	{
-		$css['/'.drupal_get_path("module","grid")."/lib/grid/".$file]=array();
+		$css['/'.\Drupal::service('extension.list.module')->getPath("grid")."/lib/grid/".$file]=array();
 	}
 	foreach($editor_widgets["css"] as $idx=>$file)
 	{
@@ -201,18 +202,18 @@ function grid_library_info_build()
 	$editor_js= $editor->getContainerEditor()->getJS();
 	$css=array();
 	$js=array();
-  $js['/'.drupal_get_path('module','grid')."/lib/js/jquery-ui-1.12.1/jquery-ui.min.js"] = array('preprocess'=>false);
+  $js['/'.\Drupal::service('extension.list.module')->getPath('grid')."/lib/js/jquery-ui-1.12.1/jquery-ui.min.js"] = array('preprocess'=>false);
   $js["/grid/ckeditor_config.js"] = array('preprocess' => false, 'type' => 'external');
 
 	foreach($editor_css as $idx=>$file)
 	{
-		$css['/'.drupal_get_path('module','grid').'/lib/grid/'.$file]=array();
+		$css['/'.\Drupal::service('extension.list.module')->getPath('grid').'/lib/grid/'.$file]=array();
 	}
 	foreach($editor_js as $idx=>$file)
 	{
 		// TODO: remove cleanly
 		if(strpos($file,"jquery-1.8.3")!== false) continue;
-		$js['/'.drupal_get_path('module','grid').'/lib/grid/'.$file]=array();
+		$js['/'.\Drupal::service('extension.list.module')->getPath('grid').'/lib/grid/'.$file]=array();
 	}
 	$libs['editor.container']=array(
 		'title'=>'Grid ContainerFactory Assets',
@@ -227,17 +228,17 @@ function grid_library_info_build()
 	$editor_js= $editor->getReuseBoxEditor()->getJS();
 	$css=array();
 	$js=array();
-  $js['/'.drupal_get_path('module','grid')."/lib/js/jquery-ui-1.12.1/jquery-ui.min.js"] = array('preprocess'=>false);
+  $js['/'.\Drupal::service('extension.list.module')->getPath('grid')."/lib/js/jquery-ui-1.12.1/jquery-ui.min.js"] = array('preprocess'=>false);
   $js["/grid/ckeditor_config.js"] = array('preprocess' => false, 'type' => 'external');
 	foreach($editor_css as $idx=>$file)
 	{
-		$css['/'.drupal_get_path('module','grid').'/lib/grid/'.$file]=array();
+		$css['/'.\Drupal::service('extension.list.module')->getPath('grid').'/lib/grid/'.$file]=array();
 	}
 	foreach($editor_js as $idx=>$file)
 	{
 		// TODO: remove cleanly
 		if(strpos($file,"jquery-1.8.3")!== false) continue;
-		$js['/'.drupal_get_path('module','grid').'/lib/grid/'.$file]=array();
+		$js['/'.\Drupal::service('extension.list.module')->getPath('grid').'/lib/grid/'.$file]=array();
 	}
   $css['/grid/container_slot.css?variant=table'] = array();
 	$libs['editor.reusableboxes']=array(
@@ -253,17 +254,17 @@ function grid_library_info_build()
 	$editor_js= $editor->getReuseContainerEditor()->getJS();
 	$css=array();
 	$js=array();
-  $js['/'.drupal_get_path('module','grid')."/lib/js/jquery-ui-1.12.1/jquery-ui.min.js"] = array('preprocess'=>false);
+  $js['/'.\Drupal::service('extension.list.module')->getPath('grid')."/lib/js/jquery-ui-1.12.1/jquery-ui.min.js"] = array('preprocess'=>false);
   $js["/grid/ckeditor_config.js"] = array('preprocess' => false, 'type' => 'external');
 	foreach($editor_css as $idx=>$file)
 	{
-		$css['/'.drupal_get_path('module','grid').'/lib/grid/'.$file]=array();
+		$css['/'.\Drupal::service('extension.list.module')->getPath('grid').'/lib/grid/'.$file]=array();
 	}
 	foreach($editor_js as $idx=>$file)
 	{
 		// TODO: remove cleanly
 		if(strpos($file,"jquery-1.8.3")!== false) continue;
-		$js['/'.drupal_get_path('module','grid').'/lib/grid/'.$file]=array();
+		$js['/'.\Drupal::service('extension.list.module')->getPath('grid').'/lib/grid/'.$file]=array();
 	}
 
 	$libs['editor.reusablecontainer']=array(
@@ -381,7 +382,12 @@ function grid_viewmodes()
 			$results[$key]=$viewmode;
 		}
 	}
+  uasort($results, 'grid_usort_viewmodes');
 	return $results;
+}
+
+function grid_usort_viewmodes($a, $b){
+  return strcmp($a['label'], $b['label']);
 }
 
 function grid_default_viewmode()
@@ -504,12 +510,42 @@ function grid_deleteFromDrupalFileUsageSystem($fileID, $gridID){
  * START Two-click-embedding
  */
 
+/**
+ * Deletes cached two-click thumbnails older than Constants::THUMBNAIL_MAX_AGE.
+ */
 function grid_delete_video_thumbnails() {
-	$path    = \Drupal::service('file_system')->realpath( Constants::THUMBNAIL_FOLDER_PATH );
+	/** @var \Drupal\Core\File\FileSystemInterface $file_system */
+	$file_system = \Drupal::service('file_system');
+	$path = $file_system->realpath( Constants::THUMBNAIL_FOLDER_PATH );
+
+	// realpath() returns FALSE if the folder was never created. Bail out before
+	// building a glob pattern, otherwise we would scan the filesystem root.
+	if($path === FALSE || !is_dir($path)) {
+		return;
+	}
+
 	$files = glob($path.'/*'); // get all file names
+	if($files === FALSE) {
+		return;
+	}
+
+	$expired_before = \Drupal::time()->getRequestTime() - Constants::THUMBNAIL_MAX_AGE;
 	foreach($files as $file){
 		if(is_file($file)) {
-			unlink($file);
+			$mtime = filemtime($file);
+			// Keep thumbnails that are still fresh (or whose age is unknown).
+			if($mtime === FALSE || $mtime > $expired_before) {
+				continue;
+			}
+			try {
+				$file_system->delete($file);
+			}
+			catch (\Drupal\Core\File\Exception\FileException $e) {
+				\Drupal::logger('grid')->warning('Could not delete expired two-click thumbnail @file: @message', [
+					'@file' => $file,
+					'@message' => $e->getMessage(),
+				]);
+			}
 		}
 	}
 }
@@ -522,6 +558,11 @@ function grid_two_click_embedding_generateHTML($url){
 //attach js-libraries
 function grid_page_attachments(array &$page) {
 	$page['#attached']['library'][] = 'grid/grid.two_click';
+}
+
+//hooks into "drush cr" to periodically delete the loaded thumbnails
+function grid_cache_flush(){
+  grid_delete_video_thumbnails();
 }
 
 /**

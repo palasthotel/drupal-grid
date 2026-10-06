@@ -2,3 +2,9 @@ grid.editor:
   route_name: grid.editor
   base_route: entity.node.canonical
   title: The Grid
+grid.two_click.settings:
+  route_name: grid.two_click.settings
+  title: 'Two-Click Settings'
+  base_route: grid.two_click.settings
+  parent: grid.admin.settings
+

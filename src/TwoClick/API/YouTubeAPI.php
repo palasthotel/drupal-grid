@@ -62,7 +62,7 @@ class YouTubeAPI extends ProviderAPIBase implements ProviderAPIInterface
     $updateCache = false;
     $now = \Drupal::time()->getRequestTime();
     $yesterday = $now - 24 * 60 * 60;
-    if( $cachedInfos->last_updated < $yesterday || $cachedInfos->last_updated === 0) $updateCache = true;
+    if( !$cachedInfos || $cachedInfos->last_updated < $yesterday || $cachedInfos->last_updated === 0) $updateCache = true;
 
     if ($cachedInfos && !$updateCache) {
       return json_decode(json_encode($cachedInfos), true); //return std class as array
@@ -93,11 +93,12 @@ class YouTubeAPI extends ProviderAPIBase implements ProviderAPIInterface
         ->fields($insertInfos)
         ->execute();
     }
-
-    $database->update($dbTable)
-      ->fields($insertInfos)
-      ->condition("$dbTable.id", $cachedInfos->id)
-      ->execute();
+    else {
+      $database->update($dbTable)
+        ->fields($insertInfos)
+        ->condition("$dbTable.id", $cachedInfos->id)
+        ->execute();
+    }
 
     return $insertInfos;
   }
@@ -205,6 +206,10 @@ class YouTubeAPI extends ProviderAPIBase implements ProviderAPIInterface
 
   private function getVideoID($url)
   {
+    $infos = $this->getInfos($url);
+    // getInfos() may return the raw URL string instead of an array when no
+    // clean YouTube URL could be resolved (e.g. when temporarily blocked by
+    // Google). Guard against that so we never index into a string.
     if (!is_array($infos) || !isset($infos['video_id'])) {
       return "default";
     }

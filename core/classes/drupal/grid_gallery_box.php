@@ -60,7 +60,7 @@ class grid_gallery_box extends grid_static_base_box
 		$filesystem=\Drupal::service('file_system');
 		$filesystem->prepareDirectory($path,\Drupal\Core\File\FileSystemInterface::CREATE_DIRECTORY);
 		/** @var File $file */
-		$file=file_save_data($content,$path.$original_file);
+		$file=\Drupal::service('file.repository')->writeData($content,$path.$original_file);
 
 		return $file->id();
 	}
@@ -78,7 +78,7 @@ class grid_gallery_box extends grid_static_base_box
 					$fid = $item->image;
 					$file= \Drupal\file\Entity\File::load($fid);
 					if($file == null) continue;
-					$src = file_create_url($file->getFileUri());
+					$src = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
 					?>
 					<div style="padding: 5px; max-width: 150px;">
@@ -108,7 +108,7 @@ class grid_gallery_box extends grid_static_base_box
 				$fid = $item->image;
 				$file= \Drupal\file\Entity\File::load($fid);
 				if($file == null) continue;
-				$src = file_create_url($file->getFileUri());
+				$src = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 
 				$gallery[] = (object)array(
 					"src" => $src,

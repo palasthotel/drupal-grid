@@ -3,13 +3,12 @@
 namespace Drupal\grid\TwoClick;
 
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\grid\TwoClick\API\PodigeeAPI;
+use Drupal\grid\TwoClick\API\FlickrAlbumAPI;
 use Drupal\grid\TwoClick\API\SpotifyAPI;
 use Drupal\grid\TwoClick\API\VimeoAPI;
 use Drupal\grid\TwoClick\API\YouTubeAPI;
 use Drupal\grid\TwoClick\API\DefaultProvider;
 use Drupal\grid\TwoClick\Constants\Constants;
-use Drupal\grid\TwoClick\Constants\EmbedProperties;
 
 class TwoClickEmbedder {
   private $folderPath;
@@ -48,6 +47,15 @@ class TwoClickEmbedder {
     if ( str_contains( $result['host'], 'spotify' ) || preg_match( "/(\w*?\.)?spotify\./um", $result['host'] ) ) {
       $this->api = new SpotifyAPI( $this->folderPath );
       return Constants::PROVIDER_SPOTIFY;
+    }
+
+
+    if ( str_contains( $result['host'], 'flickr' ) || preg_match( "/(\w*?\.)?flickr\./um", $result['host'] ) ) {
+      if (str_contains( $result['path'], 'albums' )) {
+        $this->api = new FlickrAlbumAPI( $this->folderPath );
+        return Constants::PROVIDER_FLICKR;
+      }
+
     }
 
     return Constants::PROVIDER_DEFAULT;

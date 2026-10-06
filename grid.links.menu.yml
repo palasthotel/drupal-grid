@@ -8,6 +8,11 @@ grid.admin.settings:
   parent: grid.admin
   route_name: grid.admin.settings
 
+grid.two_click.settings:
+  title: Settings Two Click
+  parent: grid.admin
+  route_name: grid.two_click.settings
+
 grid.admin.containerfactory:
   title: Container Factory
   parent: grid.admin

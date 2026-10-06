@@ -1,5 +1,5 @@
 grid.two_click:
-  version: 1.0.4
+  version: 1.0.8
   js:
     src/TwoClick/js/two-click-embedding.js: {}
   dependencies:

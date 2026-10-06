@@ -30,6 +30,7 @@ function grid_schema()
         'primary key'=>array('nid','langcode'),
         'mysql_engine'=>'InnoDB',
     );
+    $schema[\Drupal\grid\TwoClick\Constants\Constants::TWO_CLICK_DB_TABLE] = Drupal\grid\TwoClick\Constants\Constants::TWO_CLICK_DB_TABLE_SCHEMA;
     return $schema;
 }
 
@@ -76,4 +77,37 @@ function grid_update_8104($sandbox)
 function grid_update_8201($sandbox)
 {
   grid_get_core()->update();
+}
+
+function grid_update_8202( $sandbox )
+{
+
+  $tableName = \Drupal\grid\TwoClick\Constants\Constants::TWO_CLICK_DB_TABLE;
+  $tableSchema = Drupal\grid\TwoClick\Constants\Constants::TWO_CLICK_DB_TABLE_SCHEMA;
+  $database = \Drupal::database();
+  $schema   = $database->schema();
+
+  if (!$schema->tableExists($tableName)){
+    $schema->createTable( $tableName, $tableSchema );
+  }
+
+}
+
+
+function grid_update_91001( $sandbox )
+{
+  $tableName = \Drupal\grid\TwoClick\Constants\Constants::TWO_CLICK_DB_TABLE;
+  $database = \Drupal::database();
+
+  $field = [
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'size' => 'big',
+  ];
+  $schema = $database->schema();
+  // installs since this update get the column from the table's schema
+  if (!$schema->fieldExists($tableName, 'last_updated')) {
+    $schema->addField($tableName, 'last_updated', $field);
+  }
 }

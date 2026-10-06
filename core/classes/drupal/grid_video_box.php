@@ -6,6 +6,7 @@
  * @package Palasthotel\Grid
  */
 
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\grid\TwoClick\Constants\Constants;
 
 /**
@@ -31,6 +32,9 @@ class grid_video_box extends grid_static_base_box {
    */
   public function __construct() {
     parent::__construct();
+    $this->content->is_livestream_active = false;
+    $this->content->is_hover             = false;
+    $this->content->autoplay_video    = false;
     $this->content->url               = '';
     $this->content->title             = 0;
     $this->content->related           = 0;
@@ -62,14 +66,27 @@ class grid_video_box extends grid_static_base_box {
       }
 
       $this->content->path = \Drupal::service( 'file_system' )->realpath( Constants::THUMBNAIL_FOLDER_PATH );
+      \Drupal::service( 'file_system' )->prepareDirectory( $this->content->path, FileSystemInterface::CREATE_DIRECTORY );
       $files = array_diff( scandir( $this->content->path ), array( '.', '..' ) );
       $thumbnailName = explode('/', $this->content->thumbnail);
       $thumbnailName = end($thumbnailName);
       if ( ! in_array( $thumbnailName, $files ) ) {
         $this->persist();
       }
+      if ( !$this->content->title ) $this->content->html = str_replace('two-click__title', 'two-click__title hide', $this->content->html);
 
-      return $this->content->html;
+      if( (isset($this->content->is_hover) && $this->content->is_hover)
+        || (isset($this->content->is_livestream_active) && $this->content->is_livestream_active)
+      ) {
+        $this->persist();
+        $html = $this->addVideoControls();
+
+
+        return $html;
+      } else {
+        return $this->content->html;
+      }
+
     }
   }
 
@@ -84,6 +101,21 @@ class grid_video_box extends grid_static_base_box {
         'key'   => 'url',
         'label' => t( 'Video-URL' ),
         'type'  => 'text',
+      ),
+      array(
+        'key' => 'autoplay_video',
+        'label' => t('Autoplay video and let player stay in frame'),
+        'type' => 'checkbox',
+      ),
+      array(
+        'key' => 'is_hover',
+        'label' => t('Activate hover?'),
+        'type' => 'checkbox',
+      ),
+      array(
+        'key' => 'is_livestream_active',
+        'label' => t('Show Live-Indicator? (for livestreams)'),
+        'type' => 'checkbox',
       ),
       array(
         'key'   => 'title',
@@ -108,6 +140,10 @@ class grid_video_box extends grid_static_base_box {
    * @return mixed
    */
   public function persist() {
+    if(!isset($this->content->autoplay_video)) {
+      $this->content->autoplay_video = false;
+    }
+
 
 
     if ($this->twoClickIsActive){
@@ -115,11 +151,10 @@ class grid_video_box extends grid_static_base_box {
     } else {
       $this->useDirectEmbeddingRendering();
     }
+
     return parent::persist();
 
   }
-
-
 
 
   private function useTwoClickRendering(){
@@ -127,9 +162,14 @@ class grid_video_box extends grid_static_base_box {
     if ( isset( $this->content->url ) && ! empty( $this->content->url ) ) {
       $data = grid_two_click_embedding_generateHTML($this->content->url);
 
-      $this->content->thumbnail = $data['videoProperties']['thumbnail'];
+      $this->content->thumbnail = $data['embedProperties']->thumbnail;
 
-      $this->content->html = $data['code'];
+      $html = $data['code'];
+      if ( !$this->content->title ) $html = str_replace('two-click__title', 'two-click__title hide', $html);
+
+
+      $this->content->html = $html;
+
     }
 
   }
@@ -232,6 +272,54 @@ class grid_video_box extends grid_static_base_box {
     }
     else $this->content->html=$result['host'];
 
+  }
+
+  private function addVideoControls() : string
+  {
+
+    $activateHover = $this->content->is_hover ? 'hover-active' : '';
+    $isLive = $this->content->is_livestream_active ? 'is-live' : 'hide';
+
+    $contentHTML = $this->content->html;
+
+    $contentHTML = str_replace('<!-- after-two-click__provider-link -->', "<div class='$isLive indicator'>Livestream</div>", $contentHTML);
+
+    $isPlaylist = isset($this->content->playlist);
+    $playListLink = '';
+    if ($isPlaylist) {
+      if (isset($this->content->add_playlist_link)) {
+
+        $moreVideos = t('More Videos');
+
+        $link = $this->content->playlist;
+        $playListLink = <<<HTML
+        <div class="playlist-link">
+            <a href="$link" target="_blank">$moreVideos</a>
+        </div>
+
+HTML;
+
+      }
+
+    }
+
+
+    $html = <<<HTML
+        <div class="video-hover $activateHover in-grid">
+            <div class="video-container">
+                <div class="video-controls">
+                    <div class="$isLive indicator">Livestream</div>
+                    <span class="video-control close"></span>
+                </div>
+                  $contentHTML
+                  $playListLink
+            </div>
+
+        </div>
+
+    HTML;
+
+    return $html;
   }
 
 }

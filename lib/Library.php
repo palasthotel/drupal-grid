@@ -24,6 +24,14 @@ class Library {
   const FIRE_LOAD_CLASSES = "load_classes";
   const ALTER_TEMPLATES_PATHS = "templates_paths";
 
+  public API $api;
+  public Core $core;
+  public Editor $editor;
+  public GridAjaxEndpoint $endpoint;
+  public Hook $hook;
+  public Query $query;
+  public Template $template;
+
   public function __construct() {
     $this->query = new Query();
     $this->hook = new Hook();
@@ -38,7 +46,7 @@ class Library {
     $this->api = new API($this->core, $this->endpoint, $this->template);
     $this->editor = new Editor(
       $this->core->storage,
-      "/".drupal_get_path('module','grid')."/lib/grid/"
+      "/".\Drupal::service('extension.list.module')->getPath('grid')."/lib/grid/"
     );
     $this->hook->fire(self::FIRE_LOAD_CLASSES);
 

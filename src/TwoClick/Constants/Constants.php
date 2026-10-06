@@ -8,8 +8,13 @@ class Constants {
   const PROVIDER_VIMEO = "Vimeo";
   const PROVIDER_PODIGEE = "Podigee";
   const PROVIDER_SPOTIFY = "Spotify";
+  const PROVIDER_FLICKR = "Flickr";
   const PROVIDER_DEFAULT = "default";
   const THUMBNAIL_FOLDER_PATH = "public://TwoclickThumbnails/";
+  /**
+   * Maximum age of a cached thumbnail in seconds (30 days).
+   */
+  const THUMBNAIL_MAX_AGE = 30 * 24 * 60 * 60;
   const TWO_CLICK_SETTINGS = "grid.two_click.settings";
   const TWO_CLICK_SETTINGS_ENABLE = "two_click_enable";
   const TWO_CLICK_SETTINGS_VIMEO_KEY = "two_click_vimeo_api_key";
@@ -34,6 +39,12 @@ class Constants {
         'type'     => 'varchar',
         'not null' => true,
         'length'   => 50,
+      ],
+      'last_updated' => [
+        'type'     => 'int',
+        'not null' => true,
+        'default'  => 0,
+        'size'     => 'big',
       ],
     ],
     'primary key' => [ 'id' ],

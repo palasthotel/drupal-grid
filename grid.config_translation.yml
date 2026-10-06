@@ -1,0 +1,5 @@
+grid.two_click.settings:
+  title: 'Grid Two-Click settings'
+  base_route_name: grid.two_click.settings
+  names:
+    - grid.two_click.settings
