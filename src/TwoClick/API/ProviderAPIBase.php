@@ -45,7 +45,7 @@ class ProviderAPIBase {
     $disclaimerLink = $config->get(Constants::TWO_CLICK_SETTINGS_PRIVACY_LINK);
 
 
-    $useDefaultThumbnail = str_contains($thumbnail, "default.") ? "hide visibility-hidden" : "";
+    $useDefaultThumbnail = str_contains($thumbnail, "default.") ? "visibility-hidden" : "";
     $showDefault = str_contains($thumbnail, "default.") ? "default" : "";
 
 

@@ -112,10 +112,10 @@
   Drupal.behaviors.grid_video_hover_box = {
     attach: function (context, settings) {
 
-      const elements = once('grid-video-hover-box', '.grid-box-video .in-grid', context);
+      const elements = once('grid-video-hover-box', '.video-hover.hover-active.in-grid', context);
       if (!elements.length) return;
 
-      const firstGridBox = elements[0].closest('.grid-box-video')
+      const firstGridBox = elements[0].closest('.grid-box')
 
 
       const options = {
