@@ -46,7 +46,7 @@ class grid_image_box extends grid_static_base_box
 
 			if(is_object($file)){
 				if(
-					isset($this->content->imagestyle) && 
+					isset($this->content->imagestyle) &&
 					$this->content->imagestyle != "" &&
 					array_key_exists($this->content->imagestyle, grid_image_styles())
 				){
@@ -66,7 +66,7 @@ class grid_image_box extends grid_static_base_box
 					$image_html = \Drupal::service('renderer')->render($input);
 					return $a_pre . $image_html . $a_post;
 				}
-				$src = file_create_url($file->getFileUri());
+				$src = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
 				/** @var ImageFactory $factory */
 				$factory=\Drupal::service("image.factory");
 				$image = $factory->get($file->getFileUri());
@@ -133,7 +133,7 @@ class grid_image_box extends grid_static_base_box
     $filesystem=\Drupal::service('file_system');
     $filesystem->prepareDirectory($path,\Drupal\Core\File\FileSystemInterface::CREATE_DIRECTORY);
 		/** @var File $file */
-		$file=file_save_data($content,$path.$original_file);
+		$file=\Drupal::service('file.repository')->writeData($content,$path.$original_file);
 		return $file->id();
 	}
 

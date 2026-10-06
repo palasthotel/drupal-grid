@@ -68,9 +68,10 @@ class grid_node_box extends grid_box {
 	public function metaSearch($criteria,$search) {
 		$results=array();
 		/** @var QueryInterface $query */
-		$query=\Drupal::entityQuery('node');
+		$query=\Drupal::entityQuery('node')
+      ->accessCheck(TRUE)
+      ->sort('created','DESC');
 		$words=explode(" ", $search);
-		$query->sort('created','DESC');
 		if($search!='')
 		{
 			foreach($words as $word)
