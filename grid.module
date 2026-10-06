@@ -200,7 +200,7 @@ function grid_library_info_build()
 		$css['/'.$file]=array();
 	}
 	$css['/'.$base."/grid-drupal.css"]=array();
-	$css['/grid/container_slot.css?variant=table'] = array();
+	$css['/grid/container_slot.css?variant=table'] = array('type' => 'external');
 	$libs['editor']=array(
 		'title'=>'Grid Editor Assets',
 		'website'=>'http://www.palasthotel.de',
@@ -229,7 +229,7 @@ function grid_library_info_build()
 	{
 		// TODO: remove cleanly
 		if(strpos($file,"jquery-1.8.3")!== false) continue;
-		
+		$js[grid_library_base_url().ltrim($file, '/')]=array('preprocess'=>false);
 	}
 	$libs['editor.container']=array(
 		'title'=>'Grid ContainerFactory Assets',
@@ -254,9 +254,9 @@ function grid_library_info_build()
 	{
 		// TODO: remove cleanly
 		if(strpos($file,"jquery-1.8.3")!== false) continue;
-		$js[grid_library_base_url().ltrim($file, '/')]=array();
+		$js[grid_library_base_url().ltrim($file, '/')]=array('preprocess'=>false);
 	}
-  $css['/grid/container_slot.css?variant=table'] = array();
+  $css['/grid/container_slot.css?variant=table'] = array('type' => 'external');
 	$libs['editor.reusableboxes']=array(
 		'title'=>'Grid reusable boxes editor assets',
 		'website'=>'http://www.palasthotel.de',
@@ -280,7 +280,7 @@ function grid_library_info_build()
 	{
 		// TODO: remove cleanly
 		if(strpos($file,"jquery-1.8.3")!== false) continue;
-		$js[grid_library_base_url().ltrim($file, '/')]=array();
+		$js[grid_library_base_url().ltrim($file, '/')]=array('preprocess'=>false);
 	}
 
 	$libs['editor.reusablecontainer']=array(
@@ -298,7 +298,7 @@ function grid_library_info_build()
 		'website'=>'http://www.palasthotel.de',
 		'version'=>'1.0',
 		'js'=>array(),
-		'css'=>array('base'=>array($url=>array())),
+		'css'=>array('base'=>array($url=>array('type' => 'external'))),
 		'dependencies'=>array(),
 	);
 
