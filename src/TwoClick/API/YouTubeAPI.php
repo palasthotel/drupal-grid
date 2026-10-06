@@ -205,6 +205,10 @@ class YouTubeAPI extends ProviderAPIBase implements ProviderAPIInterface
 
   private function getVideoID($url)
   {
+    $infos = $this->getInfos($url);
+    // getInfos() may return the raw URL string instead of an array when no
+    // clean YouTube URL could be resolved (e.g. when temporarily blocked by
+    // Google). Guard against that so we never index into a string.
     if (!is_array($infos) || !isset($infos['video_id'])) {
       return "default";
     }
