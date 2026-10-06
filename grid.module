@@ -382,7 +382,12 @@ function grid_viewmodes()
 			$results[$key]=$viewmode;
 		}
 	}
+  uasort($results, 'grid_usort_viewmodes');
 	return $results;
+}
+
+function grid_usort_viewmodes($a, $b){
+  return strcmp($a['label'], $b['label']);
 }
 
 function grid_default_viewmode()
