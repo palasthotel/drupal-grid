@@ -6,6 +6,7 @@
  * @package Palasthotel\Grid
  */
 
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\grid\TwoClick\Constants\Constants;
 
 /**
@@ -62,6 +63,7 @@ class grid_video_box extends grid_static_base_box {
       }
 
       $this->content->path = \Drupal::service( 'file_system' )->realpath( Constants::THUMBNAIL_FOLDER_PATH );
+      \Drupal::service( 'file_system' )->prepareDirectory( $this->content->path, FileSystemInterface::CREATE_DIRECTORY );
       $files = array_diff( scandir( $this->content->path ), array( '.', '..' ) );
       $thumbnailName = explode('/', $this->content->thumbnail);
       $thumbnailName = end($thumbnailName);

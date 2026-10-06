@@ -505,12 +505,42 @@ function grid_deleteFromDrupalFileUsageSystem($fileID, $gridID){
  * START Two-click-embedding
  */
 
+/**
+ * Deletes cached two-click thumbnails older than Constants::THUMBNAIL_MAX_AGE.
+ */
 function grid_delete_video_thumbnails() {
-	$path    = \Drupal::service('file_system')->realpath( Constants::THUMBNAIL_FOLDER_PATH );
+	/** @var \Drupal\Core\File\FileSystemInterface $file_system */
+	$file_system = \Drupal::service('file_system');
+	$path = $file_system->realpath( Constants::THUMBNAIL_FOLDER_PATH );
+
+	// realpath() returns FALSE if the folder was never created. Bail out before
+	// building a glob pattern, otherwise we would scan the filesystem root.
+	if($path === FALSE || !is_dir($path)) {
+		return;
+	}
+
 	$files = glob($path.'/*'); // get all file names
+	if($files === FALSE) {
+		return;
+	}
+
+	$expired_before = \Drupal::time()->getRequestTime() - Constants::THUMBNAIL_MAX_AGE;
 	foreach($files as $file){
 		if(is_file($file)) {
-			unlink($file);
+			$mtime = filemtime($file);
+			// Keep thumbnails that are still fresh (or whose age is unknown).
+			if($mtime === FALSE || $mtime > $expired_before) {
+				continue;
+			}
+			try {
+				$file_system->delete($file);
+			}
+			catch (\Drupal\Core\File\Exception\FileException $e) {
+				\Drupal::logger('grid')->warning('Could not delete expired two-click thumbnail @file: @message', [
+					'@file' => $file,
+					'@message' => $e->getMessage(),
+				]);
+			}
 		}
 	}
 }
@@ -523,6 +553,11 @@ function grid_two_click_embedding_generateHTML($url){
 //attach js-libraries
 function grid_page_attachments(array &$page) {
 	$page['#attached']['library'][] = 'grid/grid.two_click';
+}
+
+//hooks into "drush cr" to periodically delete the loaded thumbnails
+function grid_cache_flush(){
+  grid_delete_video_thumbnails();
 }
 
 /**
