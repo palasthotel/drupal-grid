@@ -20,7 +20,9 @@ class GridContainerFactoryController
         return array(
             '#attached'=>array(
                 'library'=>array('grid/editor.container'),
+                'drupalSettings'=>grid_editor_settings(),
             ),
+            '#cache'=>array('contexts'=>array('session')),
             '#type'=>'markup',
             '#markup'=>new GridSafeString($html),
         );

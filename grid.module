@@ -194,6 +194,7 @@ function grid_library_info_build()
 		'css'=>array('base'=>$css),
 		'dependencies'=>array(
 		  'core/jquery',
+		  'grid/grid.csrf',
     ),
 	);
 
@@ -221,7 +222,7 @@ function grid_library_info_build()
 		'version'=>'1.0',
 		'js'=>$js,
 		'css'=>array('base'=>$css),
-		'dependencies'=>array('core/jquery'),
+		'dependencies'=>array('core/jquery', 'grid/grid.csrf'),
 	);
 
 	$editor_css=$editor->getReuseBoxEditor()->getCSS();
@@ -247,7 +248,7 @@ function grid_library_info_build()
 		'version'=>'1.0',
 		'js'=>$js,
 		'css'=>array('base'=>$css),
-		'dependencies'=>array('core/jquery'),
+		'dependencies'=>array('core/jquery', 'grid/grid.csrf'),
 	);
 
 	$editor_css=$editor->getReuseContainerEditor()->getCSS();
@@ -273,7 +274,7 @@ function grid_library_info_build()
 		'version'=>'1.0',
 		'js'=>$js,
 		'css'=>array('base'=>$css),
-		'dependencies'=>array('core/jquery'),
+		'dependencies'=>array('core/jquery', 'grid/grid.csrf'),
 	);
 
 	$url="/grid/container_slot.css?variant=table";
@@ -568,3 +569,17 @@ function grid_cache_flush(){
 /**
  * END Two-click-embedding
  */
+
+/**
+ * drupalSettings for pages with a grid editor: the CSRF token its requests to the
+ * grid endpoints carry, see js/grid-csrf.js.
+ *
+ * @return array
+ */
+function grid_editor_settings() {
+  return array(
+    'grid' => array(
+      'csrfToken' => \Drupal::csrfToken()->get(\Drupal\Core\Access\CsrfRequestHeaderAccessCheck::TOKEN_KEY),
+    ),
+  );
+}

@@ -26,7 +26,9 @@ class GridReusableBoxesEditor
         return array(
             '#attached'=>array(
                 'library'=>array('grid/editor.reusableboxes'),
+                'drupalSettings'=>grid_editor_settings(),
             ),
+            '#cache'=>array('contexts'=>array('session')),
             '#type'=>'markup',
             '#markup'=>new GridSafeString($html),
         );
@@ -44,7 +46,9 @@ class GridReusableBoxesEditor
         return array(
             '#attached'=>array(
                 'library'=>array('grid/editor.reusableboxes'),
+                'drupalSettings'=>grid_editor_settings(),
             ),
+            '#cache'=>array('contexts'=>array('session')),
             '#type'=>'markup',
             '#markup'=>new GridSafeString($html),
         );

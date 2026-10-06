@@ -27,7 +27,9 @@ class GridReusableContainerEditor
         return array(
             '#attached'=>array(
                 'library'=>array('grid/editor.reusablecontainer'),
+                'drupalSettings'=>grid_editor_settings(),
             ),
+            '#cache'=>array('contexts'=>array('session')),
             '#type'=>'markup',
             '#markup'=>new GridSafeString($html),
         );
@@ -45,7 +47,9 @@ class GridReusableContainerEditor
         return array(
             '#attached'=>array(
                 'library'=>array('grid/editor.reusablecontainer'),
+                'drupalSettings'=>grid_editor_settings(),
             ),
+            '#cache'=>array('contexts'=>array('session')),
             '#type'=>'markup',
             '#markup'=>new GridSafeString($html),
         );

@@ -24,6 +24,7 @@ grid.editor.ajax:
     _controller: \Drupal\grid\Controller\GridEditorController::ajax
   requirements:
     _grid_access: "{node}"
+    _csrf_request_header_token: 'TRUE'
 
 grid.editor.fileupload:
   path: '/grid_file_endpoint'
@@ -31,6 +32,7 @@ grid.editor.fileupload:
     _controller: \Drupal\grid\Controller\GridEditorController::fileUpload
   requirements:
     _grid_access: "{node}"
+    _csrf_request_header_token: 'TRUE'
 
 grid.editor.ckeditorjs:
   path: '/grid/ckeditor_config.js'
