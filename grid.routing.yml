@@ -125,6 +125,7 @@ grid.admin.reusableboxes.delete:
     _title: Delete Box
   requirements:
     _permission: administer grid
+    _csrf_token: 'TRUE'
 
 grid.admin.reusablecontainer.overview:
   path: 'admin/config/grid/container'
@@ -156,3 +157,4 @@ grid.admin.reusablecontainer.delete:
     _title: Delete Container
   requirements:
     _permission: administer grid
+    _csrf_token: 'TRUE'

@@ -10,6 +10,7 @@ namespace Drupal\grid\Controller;
 
 
 use Drupal\Core\Url;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Drupal\grid\Components\GridSafeString;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -66,6 +67,10 @@ class GridReusableBoxesEditor
     public function delete($box)
     {
         $storage=grid_get_storage();
+        if(in_array((string)$box, array_map('strval', $storage->getReusedBoxIds()), TRUE))
+        {
+            throw new ConflictHttpException((string)t('This box is still in use.'));
+        }
         $editor=grid_get_library()->editor->getReuseBoxEditor();
         $result=$editor->runDelete($storage,$box);
         if($result===TRUE)
