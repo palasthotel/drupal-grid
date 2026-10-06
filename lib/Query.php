@@ -13,6 +13,10 @@ use Palasthotel\Grid\AbstractQuery;
  */
 class Query extends AbstractQuery {
 
+  public function __wakeup(): void {
+    $this->connection = null;
+  }
+
   /**
 	 * @return string
 	 */
@@ -23,7 +27,7 @@ class Query extends AbstractQuery {
 	/**
 	 * @var mysqli
 	 */
-	var $connection;
+	private $connection = null;
 
 	/**
 	 * @return mysqli
@@ -70,5 +74,6 @@ class Query extends AbstractQuery {
 	 */
 	public function __destruct(){
 		if($this->connection) $this->connection->close();
+    $this->connection = null;
 	}
 }
