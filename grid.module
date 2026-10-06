@@ -172,7 +172,7 @@ function grid_library_info_build()
 	 * add editor js files
 	 */
 	$jsfiles= $editor->getEditorJS($language->getId(),FALSE);
-  $js['/'.\Drupal::service('extension.list.module')->getPath('grid')."/lib/js/jquery-ui-1.12.1/jquery-ui.min.js"] = array('preprocess'=>false);
+  $js['/'.\Drupal::service('extension.list.module')->getPath('grid')."/lib/js/jquery-ui/jquery-ui.min.js"] = array('preprocess'=>false);
   $js["/grid/ckeditor_config.js"] = array('preprocess' => false, 'type' => 'external');
 	foreach($jsfiles as $idx=>$file)
 	{
@@ -218,7 +218,7 @@ function grid_library_info_build()
 	$editor_js= $editor->getContainerEditor()->getJS();
 	$css=array();
 	$js=array();
-  $js['/'.\Drupal::service('extension.list.module')->getPath('grid')."/lib/js/jquery-ui-1.12.1/jquery-ui.min.js"] = array('preprocess'=>false);
+  $js['/'.\Drupal::service('extension.list.module')->getPath('grid')."/lib/js/jquery-ui/jquery-ui.min.js"] = array('preprocess'=>false);
   $js["/grid/ckeditor_config.js"] = array('preprocess' => false, 'type' => 'external');
 
 	foreach($editor_css as $idx=>$file)
@@ -244,7 +244,7 @@ function grid_library_info_build()
 	$editor_js= $editor->getReuseBoxEditor()->getJS();
 	$css=array();
 	$js=array();
-  $js['/'.\Drupal::service('extension.list.module')->getPath('grid')."/lib/js/jquery-ui-1.12.1/jquery-ui.min.js"] = array('preprocess'=>false);
+  $js['/'.\Drupal::service('extension.list.module')->getPath('grid')."/lib/js/jquery-ui/jquery-ui.min.js"] = array('preprocess'=>false);
   $js["/grid/ckeditor_config.js"] = array('preprocess' => false, 'type' => 'external');
 	foreach($editor_css as $idx=>$file)
 	{
@@ -270,7 +270,7 @@ function grid_library_info_build()
 	$editor_js= $editor->getReuseContainerEditor()->getJS();
 	$css=array();
 	$js=array();
-  $js['/'.\Drupal::service('extension.list.module')->getPath('grid')."/lib/js/jquery-ui-1.12.1/jquery-ui.min.js"] = array('preprocess'=>false);
+  $js['/'.\Drupal::service('extension.list.module')->getPath('grid')."/lib/js/jquery-ui/jquery-ui.min.js"] = array('preprocess'=>false);
   $js["/grid/ckeditor_config.js"] = array('preprocess' => false, 'type' => 'external');
 	foreach($editor_css as $idx=>$file)
 	{
