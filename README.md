@@ -42,9 +42,14 @@ of the project's build or deploy:
 (cd web/libraries/grid && npm ci && npm run build)
 ```
 
-If the project commits its contrib code, commit `libraries/grid/js/dist` with it. The
-status report (`/admin/reports/status`, "Grid library") tells whether the library is
-installed and built.
+If the project commits its contrib code, commit `libraries/grid/js/dist` with it. Check that
+Git really picked it up (`git status --short web/libraries/grid/js/dist`): up to grid 3.1.0
+the library came with its own `.gitignore`, which ignores `/js/dist`, and Git leaves the
+built editor out without a word - the grid editor then stays grey. From 3.1.1 the Composer
+archive has no `.gitignore` any more; it still has one when Composer installs from source
+(`--prefer-source`). In that case delete `web/libraries/grid/.gitignore` or commit with
+`git add -f web/libraries/grid/js/dist`. The status report (`/admin/reports/status`,
+"Grid library") tells whether the library is installed and built.
 
 Then enable the module and set it up:
 
