@@ -6,7 +6,7 @@
 ### ⚠ BREAKING CHANGES
 
 * Sites whose grid module is older than update 8104 update to a 2.x release first.
-* The module is installed with Composer, needs Drupal 10.3 or 11 and PHP 8.2. Add the repositories of palasthotel/drupal-grid and palasthotel/grid to the project's composer.json, require palasthotel/drupal-grid, build the editor in libraries/grid (npm ci && npm run build) and run the database updates. Back up the database
+* The module is installed with Composer, needs Drupal 10.3 or 11 and PHP 8.2. Add the repositories of palasthotel/drupal-grid and palasthotel/grid to the project's composer.json, require palasthotel/drupal-grid, build the editor in libraries/grid (npm ci && npm run build) and run the database updates. Back up the database first: the update deletes duplicate links.
 
 ### Features
 
@@ -46,5 +46,3 @@
 ### Code Refactoring
 
 * remove the updates of the 8.x-1.x line ([37345b6](https://github.com/palasthotel/drupal-grid/commit/37345b6769bb9b5fec33d5f8d26701afd9b2b1b6))
-
-## Changelog
