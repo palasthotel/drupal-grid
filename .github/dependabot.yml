@@ -8,5 +8,7 @@ updates:
       day: "monday"
       time: "07:00"
       timezone: "Europe/Berlin"
+    assignees:
+      - "JanaME"
     commit-message:
       prefix: "ci"
