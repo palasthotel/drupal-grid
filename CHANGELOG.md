@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/palasthotel/drupal-grid/compare/v3.0.0...v3.1.0) (2026-11-24)
+
+
+### Features
+
+* let modules add a trash link to the reusable box and container lists ([e2686ad](https://github.com/palasthotel/drupal-grid/commit/e2686ad0d3f3b54fb8188b1f136209ecb2d3ed0c))
+
 ## [3.0.0](https://github.com/palasthotel/drupal-grid/compare/v2.1.1...v3.0.0) (2026-10-12)
 
 
