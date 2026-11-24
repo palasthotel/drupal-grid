@@ -24,7 +24,7 @@ class GridReusableContainerEditor
             return Url::fromRoute("grid.admin.reusablecontainer.editor",array('container'=>$id))->toString();
         },function($id){
             return Url::fromRoute("grid.admin.reusablecontainer.delete",array('container'=>$id))->toString();
-        });
+        },$this->trashLinkFunction());
         return array(
             '#attached'=>array(
                 'library'=>array('grid/editor.reusablecontainer'),
@@ -34,6 +34,31 @@ class GridReusableContainerEditor
             '#type'=>'markup',
             '#markup'=>new GridSafeString($html),
         );
+    }
+
+    /**
+     * The function that gives the "put to trash" url of a reusable container.
+     *
+     * @return callable|null
+     *   NULL, if no module implements hook_grid_reuse_container_trash_url().
+     */
+    protected function trashLinkFunction()
+    {
+        $moduleHandler=\Drupal::moduleHandler();
+        if(!$moduleHandler->hasImplementations('grid_reuse_container_trash_url'))
+        {
+            return null;
+        }
+        return function($id) use ($moduleHandler){
+            foreach($moduleHandler->invokeAll('grid_reuse_container_trash_url',array($id)) as $url)
+            {
+                if($url instanceof Url)
+                {
+                    return $url->toString();
+                }
+            }
+            return '';
+        };
     }
 
     public function editor($container)
