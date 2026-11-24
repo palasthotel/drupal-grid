@@ -23,7 +23,7 @@ class GridReusableBoxesEditor
             return Url::fromRoute("grid.admin.reusableboxes.editor",array('box'=>$id))->toString();
         },function($id){
             return Url::fromRoute("grid.admin.reusableboxes.delete",array('box'=>$id))->toString();
-        });
+        },$this->trashLinkFunction());
         return array(
             '#attached'=>array(
                 'library'=>array('grid/editor.reusableboxes'),
@@ -33,6 +33,31 @@ class GridReusableBoxesEditor
             '#type'=>'markup',
             '#markup'=>new GridSafeString($html),
         );
+    }
+
+    /**
+     * The function that gives the "put to trash" url of a reusable box.
+     *
+     * @return callable|null
+     *   NULL, if no module implements hook_grid_reuse_box_trash_url().
+     */
+    protected function trashLinkFunction()
+    {
+        $moduleHandler=\Drupal::moduleHandler();
+        if(!$moduleHandler->hasImplementations('grid_reuse_box_trash_url'))
+        {
+            return null;
+        }
+        return function($id) use ($moduleHandler){
+            foreach($moduleHandler->invokeAll('grid_reuse_box_trash_url',array($id)) as $url)
+            {
+                if($url instanceof Url)
+                {
+                    return $url->toString();
+                }
+            }
+            return '';
+        };
     }
 
     public function editor($box)
