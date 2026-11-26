@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/palasthotel/drupal-grid/compare/v3.1.0...v3.2.0) (2026-11-26)
+
+
+### Features
+
+* add a showTitle option to the two-click embedder ([f6f5240](https://github.com/palasthotel/drupal-grid/commit/f6f524005905afdce907440cf0dd555af75314d3))
+
 ## [3.1.0](https://github.com/palasthotel/drupal-grid/compare/v3.0.0...v3.1.0) (2026-11-24)
 
 
