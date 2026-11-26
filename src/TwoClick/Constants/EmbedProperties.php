@@ -14,6 +14,7 @@ class EmbedProperties
   public string $embed = '';
   public string $thumbnail = '';
   public string $provider = '';
+  public bool $showTitle = true;
 
   public function __construct(array $properties = [])
   {

@@ -59,12 +59,13 @@ class ProviderAPIBase {
 
     $useDefaultThumbnail = str_contains($thumbnail, "default.") ? "visibility-hidden" : "";
     $showDefault = str_contains($thumbnail, "default.") ? "default" : "";
+    $hideTitle = $embedProperties->showTitle ? "" : "visibility-hidden";
 
 
     $html = <<<HTML
             <div class="two-click $provider" data-original-embed='$videoembed' data-embed='$videoembed'>
                 <div class="two-click__container">
-                  <h3 class="two-click__title $showDefault">$title</h3>
+                  <h3 class="two-click__title $showDefault $hideTitle">$title</h3>
                   <div class="two-click__button-container">
                     <svg class="two-click__play-button" viewBox="0 0 18 20" width="18px" height="20px" tabindex="0" aria-label="Play">
                         <g stroke="none" stroke-width="1" fill-rule="evenodd">
