@@ -87,6 +87,7 @@ class PodigeeAPI extends ProviderAPIBase implements ProviderAPIInterface
 
     $useDefaultThumbnail = str_contains($thumbnail, "default.jpg") ? "hide" : "";
     $showDefault = str_contains($thumbnail, "default.jpg") ? "default" : "";
+    $hideTitle = $embedProperties->showTitle ? "" : "visibility-hidden";
 
     $buttonText = t("Play Episode");
 
@@ -116,7 +117,7 @@ JS;
                         <img class="two-click__thumbnail $useDefaultThumbnail" src="$thumbnail" alt="video-thumbnail">
                     </div>
                     <div class="two-click__description_container">
-                        <h3 class="two-click__title $showDefault">$title</h3>
+                        <h3 class="two-click__title $showDefault $hideTitle">$title</h3>
                         <div class="two-click__button-container">
 
                           <svg class="two-click__play-button" viewBox="0 0 18 20" width="18px" height="20px" tabindex="0" aria-label="Play">

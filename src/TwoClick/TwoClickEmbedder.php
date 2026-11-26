@@ -69,7 +69,24 @@ class TwoClickEmbedder {
   }
 
 
-  public function switchIFrame( $url, $originalData = [] ) {
+  /**
+   * Builds the two-click markup for a URL.
+   *
+   * @param string $url
+   *   The URL of the embedded content.
+   * @param array $originalData
+   *   Data to return together with the generated markup.
+   * @param array $options
+   *   Rendering options:
+   *   - showTitle: (bool) Whether the title is visible. Defaults to TRUE.
+   *     FALSE adds the class "visibility-hidden" to the title.
+   *
+   * @return array
+   *   $originalData with the keys "embedProperties" and "code" added.
+   */
+  public function switchIFrame( $url, $originalData = [], array $options = [] ) {
+
+    $options += ['showTitle' => true];
 
     $url = trim($url);
 
@@ -78,6 +95,8 @@ class TwoClickEmbedder {
     if ($this->customEmbedCode !== '') $this->api->setEmbedCode($this->customEmbedCode);
 
     $embedProperties = $this->api->getEmbedProperties( $url );
+
+    $embedProperties->showTitle = $options['showTitle'];
 
     $originalData['embedProperties'] = $embedProperties;
     $originalData['code'] = $this->api->generateHTML( $embedProperties );
